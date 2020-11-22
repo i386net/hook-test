@@ -10,7 +10,10 @@ function App() {
     x: 0,
     y: 0,
   });
+  const [text, setText] = useState('some text')
   const renderCounter = useRef(0);
+  const inputRef = useRef(null);  // focus to input
+  const prevType = useRef(0);
 
   const increment = () => setCounter(counter + 1);
   const decrement = () => setCounter(counter -1 );
@@ -25,7 +28,7 @@ function App() {
     if (visible) {
       fetch(`https://jsonplaceholder.typicode.com/${type}`)
         .then(response => response.json())
-        .then(json => setData(json))
+        .then(json => setData([...json]))
     }
   }, [visible, type]);
 
@@ -38,9 +41,15 @@ function App() {
 
   useEffect(() => {
     renderCounter.current++;
-  },);
+  });
+
+  useEffect(() => {
+    prevType.current = counter;
+  }, [counter])
 
   const dataList = data.slice(0, 10).map(d => <li key={d.id}>{JSON.stringify(d)}</li>)
+  const inputText = e => setText(e.target.value);
+  const focus = () => inputRef.current.focus();
 
   return (
     <div className="App">
@@ -48,10 +57,14 @@ function App() {
         <button className="btn" onClick={increment}>Up</button>
         <button className="btn" onClick={decrement}>Down</button>
       </div>
-      <p>Пользователи: {counter}</p>
+      <p>Счетчик: {counter}</p>
+
       <hr className="line"/>
+      {/* useEffect */}
       <p>x: {position.x} y: {position.y}</p>
+
       <hr className="line"/>
+      {/* useEffect */}
       <div className="brn-container">
         <button className="btn" onClick={visibilityHandler}>Show Data</button>
         <button className="btn" onClick={() => setType('users')}>Users</button>
@@ -62,8 +75,15 @@ function App() {
       <ul className={visible? 'on': 'off'}>
         {dataList}
       </ul>
+
       <hr className="line"/>
+
+      {/*  useRef */}
       <p>Current render count: {renderCounter.current}</p>
+      <button className="btn" onClick={focus}>Focus</button>
+      {/* on click change focus to this input*/}
+      <input type="text" value={text} onChange={inputText} ref={inputRef}/>
+      <p>Prev type: {prevType.current} / Cur. type: {counter}</p>
     </div>
   );
 }
