@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import './App.css';
 
 function App() {
@@ -9,7 +9,8 @@ function App() {
   const [position, setPosition] = useState({
     x: 0,
     y: 0,
-  })
+  });
+  const renderCounter = useRef(0);
 
   const increment = () => setCounter(counter + 1);
   const decrement = () => setCounter(counter -1 );
@@ -30,11 +31,14 @@ function App() {
 
   useEffect(() => {
     window.addEventListener('mousemove', mouseMoveHandler);
-
     return () => {
       window.removeEventListener('mousemove', mouseMoveHandler);
     }
   }, [position]);
+
+  useEffect(() => {
+    renderCounter.current++;
+  },);
 
   const dataList = data.slice(0, 10).map(d => <li key={d.id}>{JSON.stringify(d)}</li>)
 
@@ -48,14 +52,18 @@ function App() {
       <hr className="line"/>
       <p>x: {position.x} y: {position.y}</p>
       <hr className="line"/>
-      <button className="btn" onClick={visibilityHandler}>Show Data</button>
-      <button className="btn" onClick={() => setType('users')}>Users</button>
-      <button className="btn" onClick={() => setType('posts')}>Posts</button>
-      <button className="btn" onClick={() => setType('todos')}>Todos</button>
+      <div className="brn-container">
+        <button className="btn" onClick={visibilityHandler}>Show Data</button>
+        <button className="btn" onClick={() => setType('users')}>Users</button>
+        <button className="btn" onClick={() => setType('posts')}>Posts</button>
+        <button className="btn" onClick={() => setType('todos')}>Todos</button>
+      </div>
       <p>Current type: {type}</p>
       <ul className={visible? 'on': 'off'}>
         {dataList}
       </ul>
+      <hr className="line"/>
+      <p>Current render count: {renderCounter.current}</p>
     </div>
   );
 }
