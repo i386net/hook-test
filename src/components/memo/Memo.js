@@ -1,12 +1,13 @@
 import React, {useState, useMemo, useEffect} from 'react';
+import Container from '../hoc/Container';
 
 const complexCompute = (num) => {
-  console.log('computing starts at', new Date(Date.now()))
+  console.log('computing starts at', (new Date(Date.now())).toLocaleTimeString())
   let i= 0;
-  while (i < 99999999) {
+  while (i < 10000000) {
     i++;
   }
-  console.log('computing ends', new Date(Date.now()))
+  console.log('computing ends', (new Date(Date.now())).toLocaleTimeString())
   return num * 2;
 }
 
@@ -27,7 +28,8 @@ const Memo = () => {
 
 
   return (
-    <div>
+    // <div>
+    <Container>
       <p style={style}>Use Memo</p>
       <div className="btn-container">
         <button className="btn" onClick={() => setResult(result + 1)}>➕</button>
@@ -35,8 +37,8 @@ const Memo = () => {
         <button className="btn" onClick={() => setColored(!colored)}>🔄</button>
       </div>
       <p>{computed}</p>
-    </div>
-    
+    {/*</div>*/}
+    </Container>
   )
 }
 
